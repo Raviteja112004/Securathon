@@ -1,0 +1,30 @@
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <i class="fas fa-shield-alt"></i>
+        <span>CyberGuard</span>
+    </div>
+    <div class="nav-links">
+        <a href="/" class="{{#if (eq path '/')}}active{{/if}}"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="/training" class="{{#if (eq path '/training')}}active{{/if}}"><i class="fas fa-graduation-cap"></i> Training</a>
+        <a href="/lab" class="{{#if (eq path '/lab')}}active{{/if}}"><i class="fas fa-flask"></i> Cyber Lab</a>
+        <a href="/quiz" class="{{#if (eq path '/quiz')}}active{{/if}}"><i class="fas fa-tasks"></i> Quests</a>
+        <a href="/community" class="{{#if (eq path '/community')}}active{{/if}}"><i class="fas fa-newspaper"></i> News</a>
+        <a href="/team-selection" class="{{#if (eq path '/team-selection')}}active{{/if}}"><i class="fas fa-users"></i> Team Hub</a>
+        {{#if user}}
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        {{else}}
+            <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        {{/if}}
+    </div>
+    {{#if user}}
+    <div class="user-profile">
+        <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+        <span class="username">{{user.name}}</span>
+        <span class="level">Level 12</span>
+    </div>
+    {{/if}}
+    <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav> 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Modules</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../public/script.js"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>CyberGuard</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/training"><i class="fas fa-graduation-cap"></i> Training</a>
+            <a href="/lab"><i class="fas fa-flask"></i> Cyber Lab</a>
+            <a href="/quiz"><i class="fas fa-tasks"></i> Quests</a>
+            <a href="/community"><i class="fas fa-newspaper"></i> News</a>
+            <a href="/team-selection"><i class="fas fa-users"></i> Team Hub</a>
+            <a href="{{{form}}}">{{content}}</a>
+        </div>
+        <div class="user-profile">
+            <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+            <span class="username">{{name}}</span>
+            <span class="level">Level 12</span>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Training Modules Section -->
+        <div class="training-grid">
+            <div class="card module-card">
+                <div class="module-header">
+                    <h3>Phishing Defense</h3>
+                    <span class="difficulty">Intermediate</span>
+                </div>
+                <p>Learn to identify and protect against phishing attacks</p>
+                <div class="module-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%">60%</div>
+                    </div>
+                </div>
+                <button class="btn-primary">Continue</button>
+            </div>
+            <!-- Add more training modules here -->
+        </div>
+
+        <!-- New Games Section -->
+        <section class="games-section mt-12">
+            <h2 class="text-3xl font-semibold mb-6">Games</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Game 1 -->
+                <a href="/architecture" class="card game-card">
+                    <div class="game-header">
+                        <h3>Secure Architecture</h3>
+                    </div>
+                    <p>Learn about secure system design and best practices for protecting infrastructure.</p>
+                </a>
+
+                <!-- Game 2 -->
+                <a href="/exploit" class="card game-card">
+                    <div class="game-header">
+                        <h3>Exploit Simulation</h3>
+                    </div>
+                    <p>Understand and simulate real-world exploit scenarios.</p>
+                </a>
+
+                <!-- Game 3 -->
+                <a href="/penet" class="card game-card">
+                    <div class="game-header">
+                        <h3>Penetration Testing</h3>
+                    </div>
+                    <p>Engage in ethical hacking and test for vulnerabilities.</p>
+                </a>
+
+                <!-- Game 4 -->
+                <a href="/Social" class="card game-card">
+                    <div class="game-header">
+                        <h3>Social Engineering</h3>
+                    </div>
+                    <p>Identify and protect against social engineering attacks.</p>
+                </a>
+
+                <!-- Game 5 -->
+                <a href="/cyber-game" class="card game-card">
+                    <div class="game-header">
+                        <h3>Cyber Defense</h3>
+                    </div>
+                    <p>Test your cyber defense skills in a simulated environment.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Cyber Quest. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

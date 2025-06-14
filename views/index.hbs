@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Security Learning Platform</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../public/script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #1a1a1a;
+    position: relative;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+}
+
+/* Hamburger menu button (hidden on large screens) */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* For mobile view (show hamburger) */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide nav links initially */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #1a1a1a;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex; /* Show nav links when active */
+    }
+
+    .nav-links a {
+        padding: 1rem 0;
+        border-bottom: 1px solid #333;
+        width: 100%;
+    }
+
+    .mobile-menu-btn {
+        display: block; /* Show hamburger button on mobile */
+    }
+}
+
+    </style>
+</head>
+<body class="dark-mode">
+    {{> header}}
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to Cyber Security Learning Platform</h1>
+                <p>Master cybersecurity through interactive learning, real-world simulations, and community collaboration.</p>
+                <div class="hero-buttons">
+                    <a href="/quiz" class="btn btn-primary">Start Learning</a>
+                    <a href="/cyberlab" class="btn btn-secondary">Try Cyber Lab</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Interactive Learning</h3>
+                    <p>Engage with hands-on modules and real-world scenarios</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-flask"></i>
+                    <h3>Cyber Lab</h3>
+                    <p>Practice in a safe environment with simulated attacks</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Team Collaboration</h3>
+                    <p>Join specialized teams and learn from peers</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your growth with detailed analytics</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>Ready to Begin Your Journey?</h2>
+            <p>Join our community of cybersecurity professionals and enthusiasts.</p>
+            <a href="/register" class="btn btn-primary">Get Started</a>
+        </section>
+    </main>
+
+    {{> footer}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add any initialization code here
+        });
+    </script>
+
+    <script>    // Mobile Menu Toggle with null chec
+    // Select the hamburger button and nav links container
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinksContainer = document.querySelector('.nav-links');
+
+    // Mobile Menu Toggle
+    if (mobileMenuBtn && navLinksContainer) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+        });
+    }
+</script>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="../public/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cyber Security Platform</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    {{> header}}
+
+    <main class="container">
+        <div id="dashboard-container">
+            <!-- Dashboard content will be dynamically inserted here -->
+        </div>
+    </main>
+
+    {{> footer}}
+
+    <script src="/js/components/Dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = '{{user._id}}'; // Assuming user data is passed to the template
+            dashboard.init(userId);
+        });
+    </script>
+</body>
+</html> 

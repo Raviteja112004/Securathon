@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penetration Testing Game</title>
+    
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        #game-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #000;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 20px;
+        }
+
+        h1, h2 {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .game-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            display: block;
+        }
+
+        button {
+            background-color: #004400;
+            color: #00ff00;
+            padding: 12px 24px;
+            margin: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #006600;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        button:disabled {
+            background-color: #002200;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        #output-log {
+            background-color: #111;
+            padding: 20px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            margin-top: 20px;
+            min-height: 200px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #game-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #111;
+            border: 1px solid #00ff00;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #00ff00;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .mission-summary {
+            margin-top: 20px;
+        }
+
+        .log-container {
+            background-color: #111;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        #instructions-screen {
+            padding: 20px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .instruction-section {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 2px solid #00ff00;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tool-card {
+            border: 1px solid #00ff00;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .output-example {
+            background-color: #111;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="game-container">
+        <header>
+            <h1>Penetration Testing Simulator</h1>
+        </header>
+
+        <div id="instructions-screen" class="game-section">
+            <h2>Mission Instructions</h2>
+            
+            <div class="instruction-section">
+                <h3>1. Difficulty Levels</h3>
+                <p>Choose your mission difficulty:</p>
+                <ul>
+                    <li><strong>Beginner:</strong> Basic reconnaissance tasks</li>
+                    <li><strong>Intermediate:</strong> Web exploitation challenges</li>
+                    <li><strong>Advanced:</strong> Full system compromise</li>
+                </ul>
+            </div>
+
+            <div class="instruction-section">
+                <h3>2. Available Tools</h3>
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <h4>Beginner Tools:</h4>
+                        <ul>
+                            <li>ping - Test connectivity</li>
+                            <li>nmap - Port scanning</li>
+                            <li>dirb - Directory discovery</li>
+                        </ul>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Intermediate Tools:</h4>
+                        <ul>
+                            <li>sqlmap - SQL injection testing</li>
+                            <li>xss-test - XSS vulnerability scanning</li>
+                            <li>burpsuite - Web traffic interception</li>
+                        </ul>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Advanced Tools:</h4>
+                        <ul>
+                            <li>metasploit - Exploitation framework</li>
+                            <li>privilege-escalation - Gain higher access</li>
+                            <li>backdoor - Establish persistence</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instruction-section">
+                <h3>3. Understanding Output</h3>
+                <div class="output-example">[+] Success message</div>
+                <div class="output-example">[-] Error message</div>
+                <div class="output-example">[*] Status update</div>
+                <div class="output-example">[✓] Mission completion</div>
+            </div>
+
+            <div class="instruction-section">
+                <h3>4. Important Notes</h3>
+                <ul>
+                    <li>Tools must be used in the correct sequence</li>
+                    <li>Progress bar shows mission advancement</li>
+                    <li>"Complete Mission" unlocks after all steps</li>
+                    <li>Full mission log available in results</li>
+                </ul>
+            </div>
+
+            <button onclick="startGame()" class="success">Start Game</button>
+        </div>
+
+        <div id="level-selector" class="game-section hidden">
+            <h2>Select Mission Difficulty</h2>
+            <div>
+                <button onclick="startLevel('beginner')">Beginner</button>
+                <button onclick="startLevel('intermediate')">Intermediate</button>
+                <button onclick="startLevel('advanced')">Advanced</button>
+            </div>
+        </div>
+
+        <div id="mission-briefing" class="game-section hidden">
+            <h2>Mission Briefing</h2>
+            <p id="mission-text"></p>
+            <div class="progress-bar">
+                <div id="mission-progress" class="progress"></div>
+            </div>
+            <button onclick="startMission()">Start Mission</button>
+        </div>
+
+        <div id="game-play-area" class="game-section hidden">
+            <h2>Active Mission</h2>
+            <div id="game-tools"></div>
+            <div id="game-output">
+                <div id="output-log"></div>
+            </div>
+            <button onclick="endMission()" id="end-mission-btn" disabled>Complete Mission</button>
+        </div>
+
+        <div id="game-results" class="game-section hidden">
+            <h2>Mission Results</h2>
+            <div id="results-text"></div>
+            <button onclick="restartGame()">Start New Mission</button>
+        </div>
+    </div>
+</main>
+
+    <script>
+        const missions = {
+            beginner: {
+                title: 'Beginner Level: Reconnaissance',
+                text: 'Your mission is to perform basic reconnaissance on the target system. Start with port scanning to identify potential entry points.',
+                tools: ['ping', 'nmap', 'dirb'],
+                steps: [
+                    { tool: 'ping', message: 'Testing target connectivity...' },
+                    { tool: 'nmap', message: 'Scanning for open ports...' },
+                    { tool: 'dirb', message: 'Discovering web directories...' }
+                ],
+                completionMessage: 'Basic reconnaissance completed successfully!'
+            },
+            intermediate: {
+                title: 'Intermediate Level: Web Exploitation',
+                text: 'Target website contains vulnerabilities. Your mission is to identify and exploit these vulnerabilities to gain access.',
+                tools: ['sqlmap', 'xss-test', 'burpsuite'],
+                steps: [
+                    { tool: 'burpsuite', message: 'Intercepting web traffic...' },
+                    { tool: 'sqlmap', message: 'Testing for SQL injection vulnerabilities...' },
+                    { tool: 'xss-test', message: 'Checking for XSS vulnerabilities...' }
+                ],
+                completionMessage: 'Web vulnerabilities successfully exploited!'
+            },
+            advanced: {
+                title: 'Advanced Level: System Compromise',
+                text: 'Full system compromise required. Exploit vulnerabilities, escalate privileges, and maintain persistence.',
+                tools: ['metasploit', 'privilege-escalation', 'backdoor'],
+                steps: [
+                    { tool: 'metasploit', message: 'Launching exploit framework...' },
+                    { tool: 'privilege-escalation', message: 'Attempting privilege escalation...' },
+                    { tool: 'backdoor', message: 'Establishing persistent access...' }
+                ],
+                completionMessage: 'System successfully compromised!'
+            }
+        };
+
+        let currentLevel = null;
+        let currentStep = 0;
+        let outputLog = '';
+        let hasSeenInstructions = false;
+
+        function startGame() {
+            document.getElementById('instructions-screen').classList.add('hidden');
+            document.getElementById('level-selector').classList.remove('hidden');
+            hasSeenInstructions = true;
+        }
+
+        function updateProgress() {
+            const progress = (currentStep / currentLevel.steps.length) * 100;
+            document.getElementById('mission-progress').style.width = `${progress}%`;
+        }
+
+        function startLevel(level) {
+            currentLevel = missions[level];
+            currentStep = 0;
+            document.getElementById('level-selector').classList.add('hidden');
+            document.getElementById('mission-briefing').classList.remove('hidden');
+            document.getElementById('mission-text').innerHTML = `
+                <strong>${currentLevel.title}</strong><br><br>
+                ${currentLevel.text}<br><br>
+                Available Tools: ${currentLevel.tools.join(', ')}
+            `;
+            updateProgress();
+        }
+
+        function startMission() {
+            document.getElementById('mission-briefing').classList.add('hidden');
+            document.getElementById('game-play-area').classList.remove('hidden');
+            
+            const toolsDiv = document.getElementById('game-tools');
+            toolsDiv.innerHTML = '';
+            currentLevel.tools.forEach(tool => {
+                const button = document.createElement('button');
+                button.textContent = tool.charAt(0).toUpperCase() + tool.slice(1);
+                button.onclick = () => useTool(tool);
+                toolsDiv.appendChild(button);
+            });
+
+            outputLog = `[+] Mission Started: ${currentLevel.title}\n`;
+            updateOutput();
+        }
+
+        function getToolOutput(tool) {
+            const toolOutputs = {
+                ping: '[+] Ping results:\n    Reply from 192.168.1.100: time=1ms TTL=64\n    Reply from 192.168.1.100: time=1ms TTL=64\n',
+                nmap: '[+] Port scan results:\n    22/tcp   open  ssh\n    80/tcp   open  http\n    443/tcp  open  https\n',
+                dirb: '[+] Directory scan results:\n    /admin (Status: 200)\n    /login (Status: 200)\n    /backup (Status: 403)\n',
+                sqlmap: '[+] SQL Injection test results:\n    [INFO] testing for SQL injection\n    [CRITICAL] SQL injection vulnerability found!\n',
+                'xss-test': '[+] XSS Scanner results:\n    [INFO] testing parameters\n    [CRITICAL] XSS vulnerability found in "search" parameter\n',
+                burpsuite: '[+] Proxy started:\n    [INFO] Listening on port 8080\n    [INFO] Request intercepted: POST /login\n',
+                metasploit: '[+] Exploit launched:\n    [INFO] Sending stage (206991 bytes)\n    [SUCCESS] Meterpreter session 1 opened\n',
+                'privilege-escalation': '[+] Privilege escalation attempt:\n    [INFO] Checking for SUID binaries\n    [SUCCESS] Root access achieved\n',
+                backdoor: '[+] Backdoor deployment:\n    [INFO] Creating persistent access\n    [SUCCESS] Listening on port 4444\n'
+            };
+            return toolOutputs[tool] || '[+] Command executed successfully\n';
+        }
+
+        function useTool(tool) {
+            if (currentStep < currentLevel.steps.length && currentLevel.steps[currentStep].tool === tool) {
+                outputLog += `\n[*] ${currentLevel.steps[currentStep].message}\n`;
+                outputLog += getToolOutput(tool);
+                currentStep++;
+                updateProgress();
+                updateOutput();
+
+                if (currentStep === currentLevel.steps.length) {
+                    document.getElementById('end-mission-btn').disabled = false;
+                    outputLog += `\n[✓] ${currentLevel.completionMessage}\n`;
+                    updateOutput();
+                }
+            } else {
+                outputLog += '\n[-] Tool sequence incorrect. Try a different approach.\n';
+                updateOutput();
+            }
+        }
+
+        function updateOutput() {
+            const outputElement = document.getElementById('output-log');
+            outputElement.textContent = outputLog;
+            outputElement.scrollTop = outputElement.scrollHeight;
+        }
+
+        function endMission() {
+            document.getElementById('game-play-area').classList.add('hidden');
+            document.getElementById('game-results').classList.remove('hidden');
+            
+            const resultsHtml = `
+                <div class="mission-summary">
+                    <p class="success">${currentLevel.completionMessage}</p>
+                    <h3>Steps Completed:</h3>
+                    <ul>
+                        ${currentLevel.steps.map(step => `<li>${step.message}</li>`).join('')}
+                    </ul>
+                    <h3>Mission Log:</h3>
+                    <div class="log-container">
+                        <pre>${outputLog}</pre>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('results-text').innerHTML = resultsHtml;
+        }
+
+        function restartGame() {
+            document.getElementById('game-results').classList.add('hidden');
+            if (!hasSeenInstructions) {
+                document.getElementById('instructions-screen').classList.remove('hidden');
+            } else {
+                document.getElementById('level-selector').classList.remove('hidden');
+            }
+            document.getElementById('end-mission-btn').disabled = true;
+            outputLog = '';
+            currentStep = 0;
+            updateOutput();
+        }
+    </script>
+</body>
+</html>

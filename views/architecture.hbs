@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Architect</title>
+   <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: #00ff00;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    color: #00ff00;
+}
+
+.game-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.toolbox, .network-diagram, .config-panel {
+    border: 2px solid #00ff00;
+    padding: 20px;
+    width: 30%;
+    min-height: 400px;
+}
+
+.toolbox h2, .network-diagram h2, .config-panel h2 {
+    color: #00ff00;
+}
+
+.tool-item {
+    background-color: #333;
+    color: #00ff00;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: grab;
+    border: 1px solid #00ff00;
+}
+
+.dropzone {
+    background-color: #222;
+    color: #999;
+    padding: 50px;
+    margin: 20px 0;
+    border: 2px dashed #00ff00;
+}
+
+.dropzone:hover {
+    background-color: #333;
+}
+
+.config-panel {
+    background-color: #222;
+    color: #00ff00;
+}
+
+.review-section {
+    margin-top: 20px;
+}
+
+#reviewButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #00ff00;
+    border: none;
+    color: #111;
+    cursor: pointer;
+}
+
+#reviewResult {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #00ff00;
+}
+
+   </style>
+</head>
+<body>
+    <h1>Cyber Architect: Build Your Security Architecture</h1>
+
+    <div class="game-container">
+        <!-- Toolbox with security components -->
+        <div class="toolbox">
+            <h2>Security Components</h2>
+            <div class="tool-item" draggable="true" id="firewall">Firewall</div>
+            <div class="tool-item" draggable="true" id="ids">Intrusion Detection System</div>
+            <div class="tool-item" draggable="true" id="vpn">VPN</div>
+            <div class="tool-item" draggable="true" id="encryption">Encryption</div>
+        </div>
+
+        <!-- Network diagram (drop area) -->
+        <div class="network-diagram" id="networkDiagram">
+            <h2>Network Diagram</h2>
+            <div class="dropzone" id="dropzone1">Drop Security Component Here</div>
+        </div>
+
+        <!-- Configuration panel -->
+        <div class="config-panel" id="configPanel">
+            <h2>Configuration Panel</h2>
+            <p>Click on a component to configure it.</p>
+        </div>
+    </div>
+
+    <!-- Review Button -->
+    <div class="review-section">
+        <button id="reviewButton">Review Architecture</button>
+        <div id="reviewResult"></div>
+    </div>
+
+    <script>
+        const toolboxItems = document.querySelectorAll('.tool-item');
+const dropzone = document.getElementById('dropzone1');
+const configPanel = document.getElementById('configPanel');
+const reviewButton = document.getElementById('reviewButton');
+const reviewResult = document.getElementById('reviewResult');
+
+// List to track what components have been added
+let addedComponents = [];
+
+// Drag and Drop functionality
+toolboxItems.forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+});
+
+dropzone.addEventListener('dragover', dragOver);
+dropzone.addEventListener('drop', dropItem);
+
+function dragStart(e) {
+    e.dataTransfer.setData('text', e.target.id);
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dropItem(e) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData('text');
+    const item = document.getElementById(id).cloneNode(true);
+    
+    // Only allow one instance of each component
+    if (!addedComponents.includes(id)) {
+        item.addEventListener('click', configureItem);
+        dropzone.appendChild(item);
+        addedComponents.push(id); // Add the component to the list
+    } else {
+        alert("You can only add one " + id + " to the architecture.");
+    }
+}
+
+function configureItem(e) {
+    const itemId = e.target.id;
+    configPanel.innerHTML = `<h2>Configuring: ${itemId}</h2><p>Settings for ${itemId}...</p>`;
+}
+
+// Review Architecture
+reviewButton.addEventListener('click', reviewArchitecture);
+
+function reviewArchitecture() {
+    let score = 0;
+    let feedback = [];
+
+    // Evaluate based on added components
+    if (addedComponents.includes('firewall')) {
+        score += 25;
+        feedback.push('Firewall is present.');
+    } else {
+        feedback.push('No firewall detected. Your network is vulnerable.');
+    }
+
+    if (addedComponents.includes('ids')) {
+        score += 25;
+        feedback.push('Intrusion Detection System (IDS) is configured.');
+    } else {
+        feedback.push('No IDS found. Consider adding one to monitor for intrusions.');
+    }
+
+    if (addedComponents.includes('vpn')) {
+        score += 25;
+        feedback.push('VPN is in place, providing secure communication.');
+    } else {
+        feedback.push('No VPN detected. Add a VPN for secure remote access.');
+    }
+
+    if (addedComponents.includes('encryption')) {
+        score += 25;
+        feedback.push('Encryption is enabled, securing data.');
+    } else {
+        feedback.push('Data is not encrypted. Consider enabling encryption for data security.');
+    }
+
+    // Final feedback
+    reviewResult.innerHTML = `<p>Your architecture scored ${score}/100.</p>`;
+    feedback.forEach(item => {
+        reviewResult.innerHTML += `<p>${item}</p>`;
+    });
+
+    // Final evaluation based on score
+    if (score === 100) {
+        reviewResult.innerHTML += '<p>Excellent! Your security architecture is robust.</p>';
+    } else if (score >= 75) {
+        reviewResult.innerHTML += '<p>Good, but you can improve by addressing the missing components.</p>';
+    } else {
+        reviewResult.innerHTML += '<p>Your architecture has significant weaknesses. Consider revising it.</p>';
+    }
+}
+
+    </script>
+</body>
+</html>
