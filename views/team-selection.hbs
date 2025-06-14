@@ -3,27 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Selection - Cyber Security Platform</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/components.css">
+    <title>CyberGuard Training Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    {{> header}}
-
-    <main class="container">
-        <div id="team-hub-container">
-            <!-- Team Hub content will be dynamically inserted here -->
+<body class="dark-mode">
+     <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>CyberGuard</span>
         </div>
+        <div class="nav-links">
+            <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/training"><i class="fas fa-graduation-cap"></i> Training</a>
+            <a href="/lab"><i class="fas fa-flask"></i> Cyber Lab</a>
+            <a href="/quiz"><i class="fas fa-tasks"></i> Quests</a>
+            <a href="/community"><i class="fas fa-newspaper"></i> News</a>
+             <a href="/team-selection"><i class="fas fa-users"></i> Team Hub</a>
+            <a href="{{{form}}}">{{content}}</a>
+        </div>
+        <div class="user-profile">
+            <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+            <span class="username">{{name}}</span>
+            <span class="level">Level 12</span>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="team-selection-container">
+                <h1>Choose Your Path</h1>
+                <p class="team-intro">Select your specialized training track in cybersecurity</p>
+                
+                <div class="team-cards">
+                    <div class="team-card red-team">
+                        <div class="team-card-content">
+                            <i class="fas fa-dragon team-icon"></i>
+                            <h2>Red Team</h2>
+                            <p>Offensive Security Specialists</p>
+                            <ul class="team-features">
+                                <li><i class="fas fa-check"></i> Penetration Testing</li>
+                                <li><i class="fas fa-check"></i> Exploit Development</li>
+                                <li><i class="fas fa-check"></i> Social Engineering</li>
+                                <li><i class="fas fa-check"></i> Advanced Persistence</li>
+                            </ul>
+                            <a href="/redteam"><button class="btn-team-select" data-team="red" onclick="switchToTeamHub('red')">Join Red Team</button></a>
+                        </div>
+                    </div>
+
+                    <div class="team-card white-team">
+                        <div class="team-card-content">
+                            <i class="fas fa-shield-alt team-icon"></i>
+                            <h2>White Team</h2>
+                            <p>Defensive Security Experts</p>
+                            <ul class="team-features">
+                                <li><i class="fas fa-check"></i> System Hardening</li>
+                                <li><i class="fas fa-check"></i> Incident Response</li>
+                                <li><i class="fas fa-check"></i> Threat Analysis</li>
+                                <li><i class="fas fa-check"></i> Security Architecture</li>
+                            </ul>
+                             <a href="/white"><button class="btn-team-select" data-team="white" onclick="switchToTeamHub('white')">Join White Team</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </main>
 
-    {{> footer}}
+    <footer class="bg-white shadow-md py-8 w-full mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-500">© 2024 CyberGuard. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <script src="/js/components/TeamHub.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const userId = '{{user._id}}'; // Assuming user data is passed to the template
-            teamHub.init(userId);
-        });
+        // Toggle mobile menu
+        document.querySelector('.mobile-menu-btn').onclick = function () {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('hidden');
+        };
     </script>
 </body>
 </html>

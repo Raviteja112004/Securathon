@@ -4,14 +4,13 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const hbs = require('hbs');
 const session = require('express-session'); // Add express-session
-const { User, Helpline, CommunityPost, QuizQuestion, QuizAttempt, TeamProgress, Activity } = require('./mongodb'); // Ensure CommunityPost is imported
+const { User, Helpline, CommunityPost, QuizScore } = require('./mongodb'); // Ensure CommunityPost and QuizScore are imported
 
 const app = express();
 const port = 3000;
 
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
-hbs.registerPartials(path.join(__dirname, 'views/partials'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -23,51 +22,33 @@ hbs.registerHelper('formatDate', (date) => {
 app.use(session({
     resave: false,
     saveUninitialized: true,
-    secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 60000 } // Set cookie expiration (1 minute for demo purposes)
+    secret: 'cyberguard-secure-session-secret-key-2024', // Using a secure secret key
+    cookie: { 
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        httpOnly: true // Prevents client side JS from reading the cookie
+    }
 }));
 
-// Register Handlebars helpers
-hbs.registerHelper('eq', function (a, b) {
-    return a === b;
-});
-
-// Middleware to add path to all templates
-app.use((req, res, next) => {
-    res.locals.path = req.path;
-    next();
-});
-
-// Middleware to add user data to all templates
-app.use((req, res, next) => {
-    res.locals.user = req.session.user || null;
-    next();
-});
-
 app.get('/', (req, res) => {
+    // Check if the user is logged in
     const user = req.session.user || null;
     res.render('index', {
-        user: user,
         content: user ? 'Log Out' : 'Login',
         name: user ? `${user.firstName} ${user.lastName}` : 'User',
-        form: user ? '/logout' : '/login',
+        form: user ? '/logout' : '/login', // Change form to point to logout if logged in
         successMessage: req.session.successMessage || ''
     });
-    req.session.successMessage = '';
+    req.session.successMessage = ''; // Clear success message after displaying
 });
 
+
 app.get('/login', (req, res) => {
-    res.render('login', { 
-        user: req.session.user || null,
-        content: '' 
-    });
+    res.render('login', { content: '' });
 });
 
 app.get('/signup', (req, res) => {
-    res.render('signup', { 
-        user: req.session.user || null,
-        content: '' 
-    });
+    res.render('signup', { content: '' });
 });
 
 app.get('/helpline', (req, res) => {
@@ -79,10 +60,7 @@ app.get('/training', (req, res) => {
 });
 
 app.get('/quiz', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    res.render('quiz', { user: req.session.user });
+    res.render('quiz', { user: req.session.user || null }); // Pass user info to helpline page
 });
 
 app.get('/lab', (req, res) => {
@@ -121,21 +99,6 @@ app.get('/architecture', (req, res) => {
     res.render('architecture', { user: req.session.user || null }); // Pass user info to helpline page
 });
 
-// Cyber Lab Routes
-app.get('/cyberlab', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    res.render('cyberlab', { user: req.session.user });
-});
-
-// Community Feed Routes
-app.get('/community', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    res.render('community', { user: req.session.user });
-});
 
 // Signup Route
 // Signup Route
@@ -258,244 +221,48 @@ app.post('/community/reply/:postId', async (req, res) => {
     }
 });
 
-// Quiz Routes
-app.get('/api/quiz/questions', async (req, res) => {
+// Add leaderboard route
+app.get('/leaderboard', async (req, res) => {
     try {
-        const { difficulty, count = 5 } = req.query;
-        const questions = await QuizQuestion.aggregate([
-            { $match: { difficultyLevel: difficulty } },
-            { $sample: { size: parseInt(count) } }
-        ]);
-        res.json(questions);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch questions' });
-    }
-});
-
-app.post('/api/quiz/submit', async (req, res) => {
-    try {
-        const { userId, answers, difficulty } = req.body;
-        const questions = await QuizQuestion.find({
-            _id: { $in: Object.keys(answers) }
+        const scores = await QuizScore.find()
+            .sort({ percentage: -1, date: -1 })
+            .limit(100); // Show top 100 scores
+        
+        res.render('leaderboard', {
+            user: req.session.user || null,
+            scores,
+            content: req.session.user ? 'Log Out' : 'Login',
+            name: req.session.user ? `${req.session.user.firstName} ${req.session.user.lastName}` : 'User',
+            form: req.session.user ? '/logout' : '/login'
         });
-
-        let score = 0;
-        questions.forEach(question => {
-            if (question.correctAnswer === answers[question._id]) {
-                score++;
-            }
-        });
-
-        const attempt = new QuizAttempt({
-            userId,
-            score,
-            difficultyLevel: difficulty
-        });
-        await attempt.save();
-
-        // Update team progress if exists
-        const teamProgress = await TeamProgress.findOne({ userId });
-        if (teamProgress) {
-            teamProgress.totalScore += score;
-            await teamProgress.save();
-        }
-
-        res.json({ score, totalQuestions: questions.length });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to submit quiz' });
-    }
-});
-
-// TeamHub Routes
-app.get('/teamhub', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    res.render('teamhub', { user: req.session.user });
-});
-
-app.post('/api/team/select', async (req, res) => {
-    try {
-        const { userId, teamType } = req.body;
-        let teamProgress = await TeamProgress.findOne({ userId });
-
-        if (teamProgress) {
-            teamProgress.teamType = teamType;
-            teamProgress.updatedAt = new Date();
-        } else {
-            teamProgress = new TeamProgress({
-                userId,
-                teamType,
-                currentLevel: 1,
-                totalPoints: 0,
-                achievements: [],
-                completedTopics: [],
-                recentActivities: []
-            });
-        }
-
-        await teamProgress.save();
-        res.json(teamProgress);
-    } catch (error) {
-        console.error('Error selecting team:', error);
-        res.status(500).json({ error: 'Failed to select team' });
-    }
-});
-
-app.post('/api/team/update-points', async (req, res) => {
-    try {
-        const { userId, points, activity } = req.body;
-        const teamProgress = await TeamProgress.findOne({ userId });
-
-        if (!teamProgress) {
-            return res.status(404).json({ error: 'Team progress not found' });
-        }
-
-        // Update total points
-        teamProgress.totalPoints += points;
-
-        // Add activity to recent activities
-        teamProgress.recentActivities.unshift({
-            type: activity.type,
-            description: activity.description,
-            points: points,
-            timestamp: new Date()
-        });
-
-        // Keep only last 10 activities
-        if (teamProgress.recentActivities.length > 10) {
-            teamProgress.recentActivities = teamProgress.recentActivities.slice(0, 10);
-        }
-
-        // Check for achievements
-        const newAchievements = checkAchievements(teamProgress);
-        if (newAchievements.length > 0) {
-            teamProgress.achievements.push(...newAchievements);
-            // Add achievement activities
-            newAchievements.forEach(achievement => {
-                teamProgress.recentActivities.unshift({
-                    type: 'achievement',
-                    description: `Unlocked achievement: ${achievement}`,
-                    points: 50, // Bonus points for achievements
-                    timestamp: new Date()
-                });
-            });
-        }
-
-        // Update level based on total points
-        const newLevel = Math.floor(teamProgress.totalPoints / 1000) + 1;
-        if (newLevel > teamProgress.currentLevel) {
-            teamProgress.currentLevel = newLevel;
-            teamProgress.recentActivities.unshift({
-                type: 'achievement',
-                description: `Reached level ${newLevel}!`,
-                points: 100, // Bonus points for leveling up
-                timestamp: new Date()
-            });
-        }
-
-        teamProgress.updatedAt = new Date();
-        await teamProgress.save();
-
-        res.json({
-            totalPoints: teamProgress.totalPoints,
-            currentLevel: teamProgress.currentLevel,
-            achievements: teamProgress.achievements,
-            recentActivities: teamProgress.recentActivities
-        });
-    } catch (error) {
-        console.error('Error updating points:', error);
-        res.status(500).json({ error: 'Failed to update points' });
-    }
-});
-
-app.get('/api/team/leaderboard', async (req, res) => {
-    try {
-        const leaderboard = await TeamProgress.find()
-            .sort({ totalPoints: -1 })
-            .limit(10)
-            .select('userId totalPoints currentLevel');
-
-        // Get usernames for the leaderboard
-        const leaderboardWithUsernames = await Promise.all(
-            leaderboard.map(async (entry) => {
-                const user = await User.findById(entry.userId);
-                return {
-                    rank: leaderboard.indexOf(entry) + 1,
-                    username: user ? user.name : 'Unknown',
-                    points: entry.totalPoints,
-                    level: entry.currentLevel
-                };
-            })
-        );
-
-        res.json(leaderboardWithUsernames);
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
-        res.status(500).json({ error: 'Failed to fetch leaderboard' });
+        res.status(500).send('Internal Server Error');
     }
 });
 
-// Helper function to check for achievements
-function checkAchievements(teamProgress) {
-    const newAchievements = [];
-    const currentAchievements = new Set(teamProgress.achievements);
-
-    // First victory achievement
-    if (teamProgress.totalPoints >= 100 && !currentAchievements.has('first_win')) {
-        newAchievements.push('first_win');
-    }
-
-    // Perfect score achievement
-    const hasPerfectScore = teamProgress.completedTopics.some(topic => topic.score === 100);
-    if (hasPerfectScore && !currentAchievements.has('perfect_score')) {
-        newAchievements.push('perfect_score');
-    }
-
-    // Team player achievement
-    const teamChallenges = teamProgress.recentActivities.filter(
-        activity => activity.type === 'challenge'
-    ).length;
-    if (teamChallenges >= 5 && !currentAchievements.has('team_player')) {
-        newAchievements.push('team_player');
-    }
-
-    // Security expert achievement
-    if (teamProgress.currentLevel >= 5 && !currentAchievements.has('security_expert')) {
-        newAchievements.push('security_expert');
-    }
-
-    return newAchievements;
-}
-
-// Dashboard Routes
-app.get('/dashboard', (req, res) => {
+// Add API endpoint to save quiz scores
+app.post('/api/save-quiz-score', async (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login');
+        return res.status(401).json({ error: 'You must be logged in to save scores.' });
     }
-    res.render('dashboard', { user: req.session.user });
-});
 
-app.get('/api/dashboard/:userId', async (req, res) => {
     try {
-        const userId = req.params.userId;
-        const [quizAttempts, teamProgress, recentActivities] = await Promise.all([
-            QuizAttempt.find({ userId }).sort({ completedAt: -1 }).limit(5),
-            TeamProgress.findOne({ userId }),
-            Activity.find({ userId }).sort({ completedAt: -1 }).limit(5)
-        ]);
+        const { score, totalQuestions } = req.body;
+        const percentage = ((score / totalQuestions) * 100).toFixed(2);
 
-        const user = await User.findById(userId);
-        
-        res.json({
-            username: user.name,
-            quizHistory: quizAttempts,
-            teamProgress,
-            recentActivities,
-            totalScore: teamProgress ? teamProgress.totalScore : 0
+        const newScore = new QuizScore({
+            username: req.session.user.name,
+            score,
+            totalQuestions,
+            percentage
         });
+
+        await newScore.save();
+        res.json({ success: true, message: 'Score saved successfully!' });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch dashboard data' });
+        console.error('Error saving quiz score:', error);
+        res.status(500).json({ error: 'Failed to save score.' });
     }
 });
 
