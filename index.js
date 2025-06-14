@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const hbs = require('hbs');
 const session = require('express-session'); // Add express-session
-const { User, Helpline, CommunityPost } = require('./mongodb'); // Ensure CommunityPost is imported
+const { User, Helpline, CommunityPost, QuizScore } = require('./mongodb'); // Ensure CommunityPost and QuizScore are imported
 
 const app = express();
 const port = 3000;
@@ -22,8 +22,12 @@ hbs.registerHelper('formatDate', (date) => {
 app.use(session({
     resave: false,
     saveUninitialized: true,
-    secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 60000 } // Set cookie expiration (1 minute for demo purposes)
+    secret: 'cyberguard-secure-session-secret-key-2024', // Using a secure secret key
+    cookie: { 
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        httpOnly: true // Prevents client side JS from reading the cookie
+    }
 }));
 
 app.get('/', (req, res) => {
@@ -214,6 +218,51 @@ app.post('/community/reply/:postId', async (req, res) => {
     } catch (error) {
         console.error('Error replying to post:', error.message);
         res.status(500).json({ error: 'Server error. Please try again later.' });
+    }
+});
+
+// Add leaderboard route
+app.get('/leaderboard', async (req, res) => {
+    try {
+        const scores = await QuizScore.find()
+            .sort({ percentage: -1, date: -1 })
+            .limit(100); // Show top 100 scores
+        
+        res.render('leaderboard', {
+            user: req.session.user || null,
+            scores,
+            content: req.session.user ? 'Log Out' : 'Login',
+            name: req.session.user ? `${req.session.user.firstName} ${req.session.user.lastName}` : 'User',
+            form: req.session.user ? '/logout' : '/login'
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Add API endpoint to save quiz scores
+app.post('/api/save-quiz-score', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'You must be logged in to save scores.' });
+    }
+
+    try {
+        const { score, totalQuestions } = req.body;
+        const percentage = ((score / totalQuestions) * 100).toFixed(2);
+
+        const newScore = new QuizScore({
+            username: req.session.user.name,
+            score,
+            totalQuestions,
+            percentage
+        });
+
+        await newScore.save();
+        res.json({ success: true, message: 'Score saved successfully!' });
+    } catch (error) {
+        console.error('Error saving quiz score:', error);
+        res.status(500).json({ error: 'Failed to save score.' });
     }
 });
 
