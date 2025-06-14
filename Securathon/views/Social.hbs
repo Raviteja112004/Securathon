@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Engineering Challenge</title>
+    
+    
+    <style>
+           :root {
+            --neon-green: #00ff00;
+            --dark-green: #004400;
+            --darker-green: #003300;
+            --light-green: #98ff98;
+            --terminal-black: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--terminal-black);
+            color: var(--neon-green);
+        }
+
+        .game-container {
+            background: #000000;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+
+        h1, h2 {
+            color: var(--neon-green);
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-green);
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 10px;
+        }
+
+        .attack-selection, .game-elements, .message-box, .buttons, .scoreboard {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--dark-green);
+        }
+
+        .attack-selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid var(--neon-green);
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: var(--terminal-black);
+            color: var(--neon-green);
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: var(--neon-green);
+            color: var(--terminal-black);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .message-box {
+            background-color: var(--darker-green);
+            padding: 20px;
+            border: 1px solid var(--neon-green);
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px var(--dark-green);
+        }
+
+        .scoreboard {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: var(--darker-green);
+            border: 1px solid var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .audio-player {
+            width: 100%;
+            margin: 10px 0;
+            filter: hue-rotate(120deg);
+        }
+
+        .sms-message {
+            background: var(--darker-green);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid var(--neon-green);
+            font-family: 'Courier New', monospace;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .response-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .correct {
+            background-color: var(--dark-green);
+            border: 1px solid var(--neon-green);
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        .incorrect {
+            background-color: #440000;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            color: #ff0000;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+        }
+
+        #timer {
+            color: var(--light-green);
+            font-size: 1.2em;
+        }
+
+        #score {
+            color: var(--light-green);
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+     <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>CyberGuard</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/training"><i class="fas fa-graduation-cap"></i> Training</a>
+            <a href="/lab"><i class="fas fa-flask"></i> Cyber Lab</a>
+            <a href="/quiz"><i class="fas fa-tasks"></i> Quests</a>
+            <a href="/community"><i class="fas fa-newspaper"></i> News</a>
+             <a href="/team-selection"><i class="fas fa-users"></i> Team Hub</a>
+            <a href="{{{form}}}">{{content}}</a>
+        </div>
+        <div class="user-profile">
+            <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+            <span class="username">{{name}}</span>
+            <span class="level">Level 12</span>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="game-container">
+        <h1>Social Engineering Challenge</h1>
+        
+        <!-- Initial Screen -->
+        <div id="initial-screen">
+            <p class="text-center">Test your ability to detect social engineering attacks!</p>
+            <div class="attack-selection">
+                <button onclick="selectMode('sms')">SMS Attacks</button>
+                <button onclick="selectMode('audio')">Audio Attacks</button>
+            </div>
+        </div>
+
+        <!-- Game Elements -->
+        <div id="game-elements" class="hidden">
+            <div id="message-box" class="message-box"></div>
+            <div class="response-buttons">
+                <button onclick="checkAnswer('malicious')">Malicious</button>
+                <button onclick="checkAnswer('legitimate')">Legitimate</button>
+            </div>
+            <div class="scoreboard">
+                <div>Score: <span id="score">0</span></div>
+                <div>Timer: <span id="timer">30</span>s</div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden">
+            <h2>Game Over!</h2>
+            <div id="final-score"></div>
+            <button onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+     </main>
+
+    <script>
+        // Game state
+        let currentMode = '';
+        let score = 0;
+        let timer = 30;
+        let currentScenario = null;
+        let timerInterval;
+
+        // Scenarios database
+        const smsScenarios = [
+            {
+                message: "URGENT: Your bank account has been compromised. Click here to verify your identity: http://secure-bank-verify.com",
+                type: "malicious",
+                explanation: "Phishing attempt using urgency and suspicious link"
+            },
+            {
+                message: "Your package delivery #4589 is pending. Pay $2.99 customs fee: http://delivery-express-pay.net",
+                type: "malicious",
+                explanation: "Scam using package delivery as bait"
+            },
+            {
+                message: "Hi, this is your bank. Your scheduled payment of $450 to Electric Company was processed on 10/24/2024.",
+                type: "legitimate",
+                explanation: "Regular bank notification with specific details"
+            },
+            {
+                message: "FINAL NOTICE: Your account will be suspended. Verify now: bit.ly/acc-verify",
+                type: "malicious",
+                explanation: "Pressure tactics with shortened suspicious link"
+            },
+            {
+                message: "Your appointment with Dr. Smith is confirmed for tomorrow at 2:30 PM. Reply Y to confirm or N to cancel.",
+                type: "legitimate",
+                explanation: "Standard appointment reminder with clear options"
+            }
+        ];
+
+        const audioScenarios = [
+            {
+                title: "Tech Support Scam",
+                audio: "/api/placeholder/audio/1",
+                type: "malicious",
+                transcript: "This is Microsoft Tech Support. We've detected a virus on your computer. Provide remote access immediately to prevent data loss.",
+                explanation: "Impersonating Microsoft and creating urgency"
+            },
+            {
+                title: "Legitimate IT Department",
+                audio: "/api/placeholder/audio/2",
+                type: "legitimate",
+                transcript: "Hi, this is John from IT. As per the email sent last week, we're doing scheduled maintenance tonight at 8 PM.",
+                explanation: "References previous communication and provides specific details"
+            },
+            {
+                title: "Bank Account Scam",
+                audio: "/api/placeholder/audio/3",
+                type: "malicious",
+                transcript: "Your account has been charged $499. Press 1 immediately to dispute this transaction.",
+                explanation: "Creating panic with unauthorized charges"
+            }
+        ];
+
+        function selectMode(mode) {
+            currentMode = mode;
+            document.getElementById('initial-screen').classList.add('hidden');
+            document.getElementById('game-elements').classList.remove('hidden');
+            startGame();
+        }
+
+        function startGame() {
+            score = 0;
+            timer = 30;
+            updateScore();
+            startTimer();
+            showNextScenario();
+        }
+
+        function showNextScenario() {
+            const scenarios = currentMode === 'sms' ? smsScenarios : audioScenarios;
+            currentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            
+            const messageBox = document.getElementById('message-box');
+            if (currentMode === 'sms') {
+                messageBox.innerHTML = `<div class="sms-message">${currentScenario.message}</div>`;
+            } else {
+                messageBox.innerHTML = `
+                    <h3>${currentScenario.title}</h3>
+                    <p>Transcript: "${currentScenario.transcript}"</p>
+                    <audio controls class="audio-player">
+                        <source src="${currentScenario.audio}" type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                `;
+            }
+        }
+
+        function checkAnswer(answer) {
+            const isCorrect = (answer === 'malicious' && currentScenario.type === 'malicious') ||
+                            (answer === 'legitimate' && currentScenario.type === 'legitimate');
+            
+            if (isCorrect) {
+                score += 10;
+                updateScore();
+            }
+
+            // Show explanation
+            const messageBox = document.getElementById('message-box');
+            messageBox.innerHTML += `
+                <div class="${isCorrect ? 'correct' : 'incorrect'}">
+                    <p>${isCorrect ? 'Correct!' : 'Incorrect!'}</p>
+                    <p>Explanation: ${currentScenario.explanation}</p>
+                </div>
+            `;
+
+            // Show next scenario after brief delay
+            setTimeout(showNextScenario, 2000);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timer--;
+                document.getElementById('timer').textContent = timer;
+                if (timer <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            document.getElementById('game-elements').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            document.getElementById('final-score').textContent = `Final Score: ${score}`;
+        }
+
+        function restartGame() {
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('initial-screen').classList.remove('hidden');
+            score = 0;
+            timer = 30;
+            updateScore();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Modules</title>
+ <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../public/script.js"></script>
+    <style>
+        .leaderboard-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .leaderboard-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .leaderboard-btn i {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+ <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>CyberGuard</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/training"><i class="fas fa-graduation-cap"></i> Training</a>
+            <a href="/lab"><i class="fas fa-flask"></i> Cyber Lab</a>
+            <a href="/quiz"><i class="fas fa-tasks"></i> Quests</a>
+            <a href="/community"><i class="fas fa-newspaper"></i> News</a>
+             <a href="/team-selection"><i class="fas fa-users"></i> Team Hub</a>
+            <a href="{{{form}}}">{{content}}</a>
+        </div>
+        <div class="user-profile">
+            <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+            <span class="username">{{name}}</span>
+            <span class="level">Level 12</span>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">Cybersecurity Quiz</h1>
+            <a href="/leaderboard" class="leaderboard-btn"><i class="fas fa-trophy"></i> View Leaderboard</a>
+        </div>
+        <div class="quests-grid">
+            <div class="card daily-quest">
+                <div class="quest-header">
+                    <h3>Daily Challenge</h3>
+                    <span class="time-remaining">23:45:12</span>
+                </div>
+                <p>Complete 3 phishing identification exercises</p>
+                <div class="quest-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 33%">1/3</div>
+                    </div>
+                </div>
+                <button class="btn-primary">Start Quest</button>
+            </div>
+        </div>
+        <div class="quiz-container">
+            <div class="question"></div>
+            <div class="options"></div>
+            <div class="result"></div>
+            <button class="next-btn">Next Question</button>
+            <button class="submit-btn">Submit Quiz</button>
+            <button class="restart-btn">Restart Quiz</button>
+            <div class="score"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Cyber Quest. All rights reserved.</p>
+    </footer>
+    <script>
+        const userId = "specificUserId"; // Replace with actual user ID
+        const questions = [
+            {
+                question: "What is a firewall?",
+                options: [
+                    "A physical wall that protects servers",
+                    "A network security device that monitors traffic",
+                    "A type of computer virus",
+                    "A backup storage device"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is phishing?",
+                options: [
+                    "A type of fish",
+                    "An attempt to obtain sensitive information",
+                    "A computer security measure",
+                    "A network protocol"
+                ],
+                correct: 1
+            },
+            {
+                question: "What does SSL stand for?",
+                options: [
+                    "Secure Sockets Layer",
+                    "System Security Layer",
+                    "Simple Sockets Layer",
+                    "Secure Server Layer"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is malware?",
+                options: [
+                    "Software that damages or disrupts systems",
+                    "Hardware used for security",
+                    "A method of data encryption",
+                    "A type of internet browser"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is two-factor authentication?",
+                options: [
+                    "A method of encrypting files",
+                    "A security process that requires two forms of verification",
+                    "A network security measure",
+                    "A method of data backup"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a DDoS attack?",
+                options: [
+                    "A method of data protection",
+                    "A type of cyber attack that overwhelms a system",
+                    "A software installation process",
+                    "A form of network security"
+                ],
+                correct: 1
+            },
+            {
+                question: "What does VPN stand for?",
+                options: [
+                    "Virtual Private Network",
+                    "Virtual Public Network",
+                    "Variable Protected Network",
+                    "Virtual Protected Network"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is social engineering?",
+                options: [
+                    "A method of network design",
+                    "Manipulating people into divulging confidential information",
+                    "A type of software development",
+                    "An engineering discipline"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a brute force attack?",
+                options: [
+                    "An attack using physical force",
+                    "A method of gaining access by trying many passwords",
+                    "A type of email phishing",
+                    "A method of network design"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is vulnerability scanning?",
+                options: [
+                    "Medical scanning",
+                    "Checking for security weaknesses",
+                    "A type of malware",
+                    "A backup system"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a zero-day exploit?",
+                options: [
+                    "A security patch released on the same day",
+                    "A vulnerability that is exploited before it's known to the public",
+                    "A type of encryption method",
+                    "A backup strategy"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the purpose of a honeypot?",
+                options: [
+                    "A type of malware",
+                    "A decoy system to attract cyber attacks",
+                    "A backup storage system",
+                    "A network monitoring tool"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is encryption?",
+                options: [
+                    "A method of compressing files",
+                    "Converting data into a secure format",
+                    "A type of network cable",
+                    "A backup process"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a man-in-the-middle attack?",
+                options: [
+                    "A physical security breach",
+                    "An attack where the attacker secretly relays messages",
+                    "A type of firewall",
+                    "A backup strategy"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a rootkit?",
+                options: [
+                    "A gardening tool",
+                    "Malicious software that provides unauthorized access",
+                    "A type of firewall",
+                    "A backup system"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the purpose of a security audit?",
+                options: [
+                    "To check physical security only",
+                    "To evaluate security measures and identify vulnerabilities",
+                    "To install new security software",
+                    "To backup data"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a security token?",
+                options: [
+                    "A physical or digital device for authentication",
+                    "A type of malware",
+                    "A network protocol",
+                    "A backup method"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is the principle of least privilege?",
+                options: [
+                    "Giving users maximum access rights",
+                    "Limiting user access to only what's necessary",
+                    "A type of encryption",
+                    "A backup strategy"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a security policy?",
+                options: [
+                    "A type of firewall",
+                    "A set of rules and procedures for security",
+                    "A backup system",
+                    "A network protocol"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the purpose of a security certificate?",
+                options: [
+                    "To backup data",
+                    "To verify the identity of a website or server",
+                    "To encrypt files",
+                    "To monitor network traffic"
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let questionAnswered = false;
+
+        function initQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            questionAnswered = false;
+            loadQuestion();
+            updateScore();
+            document.querySelector('.restart-btn').style.display = 'none';
+            document.querySelector('.submit-btn').style.display = 'none';
+        }
+
+        function loadQuestion() {
+            questionAnswered = false;
+            const question = questions[currentQuestion];
+            document.querySelector('.question').textContent = `${currentQuestion + 1}. ${question.question}`;
+            
+            const optionsContainer = document.querySelector('.options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+
+            document.querySelector('.result').textContent = '';
+            document.querySelector('.next-btn').style.display = 'none';
+            document.querySelector('.submit-btn').style.display = 'none';
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (questionAnswered) return;
+            
+            questionAnswered = true;
+            const correct = questions[currentQuestion].correct;
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                option.style.pointerEvents = 'none';
+                if (index === correct) {
+                    option.classList.add('correct');
+                }
+                if (index === selectedIndex && selectedIndex !== correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === correct) {
+                score++;
+                document.querySelector('.result').textContent = 'Correct! 🎉';
+            } else {
+                document.querySelector('.result').textContent = 'Incorrect! Try again next time.';
+            }
+
+            updateScore();
+
+            if (currentQuestion < questions.length - 1) {
+                document.querySelector('.next-btn').style.display = 'block';
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function updateScore() {
+            document.querySelector('.score').textContent = `Score: ${score}/${currentQuestion + 1}`;
+        }
+
+        function showFinalScore() {
+            const percentage = ((score / questions.length) * 100).toFixed(2);
+            document.querySelector('.result').textContent = `Your final score is ${percentage}%.`;
+            document.querySelector('.submit-btn').style.display = 'block';
+        }
+
+        document.querySelector('.next-btn').addEventListener('click', () => {
+            currentQuestion++;
+            loadQuestion();
+        });
+
+        document.querySelector('.submit-btn').addEventListener('click', () => {
+            saveScore(userId, score);
+        });
+
+        document.querySelector('.restart-btn').addEventListener('click', initQuiz);
+
+        function saveScore(userId, score) {
+            // Save score to MongoDB
+            fetch('/api/save-quiz-score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    score: score,
+                    totalQuestions: questions.length
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector('.result').textContent = 'Your score has been saved! Check the leaderboard to see your ranking.';
+                } else {
+                    document.querySelector('.result').textContent = 'Error saving score. Please try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.querySelector('.result').textContent = 'Error saving score. Please try again.';
+            });
+        }
+
+        window.onload = initQuiz;
+    </script>
+
+</body>
+</html>

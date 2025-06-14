@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Training Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../public/script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #1a1a1a;
+    position: relative;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+}
+
+/* Hamburger menu button (hidden on large screens) */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* For mobile view (show hamburger) */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide nav links initially */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #1a1a1a;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex; /* Show nav links when active */
+    }
+
+    .nav-links a {
+        padding: 1rem 0;
+        border-bottom: 1px solid #333;
+        width: 100%;
+    }
+
+    .mobile-menu-btn {
+        display: block; /* Show hamburger button on mobile */
+    }
+}
+
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>CyberGuard</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/training"><i class="fas fa-graduation-cap"></i> Training</a>
+            <a href="/lab"><i class="fas fa-flask"></i> Cyber Lab</a>
+            <a href="/quiz"><i class="fas fa-tasks"></i> Quests</a>
+            <a href="/community"><i class="fas fa-newspaper"></i> News</a>
+             <a href="/team-selection"><i class="fas fa-users"></i> Team Hub</a>
+            <a href="{{{form}}}">{{content}}</a>
+        </div>
+        <div class="user-profile">
+            <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+            <span class="username">{{name}}</span>
+            <span class="level">Level 12</span>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="active-section">
+            <div class="dashboard-grid">
+                <!-- Progress Overview -->
+                <div class="card progress-card">
+                    <h2>Your Progress</h2>
+                    <div class="progress-stats">
+                        <div class="stat">
+                            <span class="label">Overall Progress</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 75%">75%</div>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Points</span>
+                            <span class="value">2,450</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Completed Modules</span>
+                            <span class="value">15/20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Challenges -->
+                <div class="card challenges-card">
+                    <h2>Active Challenges</h2>
+                    <div class="challenge-list">
+                        <div class="challenge">
+                            <i class="fas fa-lock"></i>
+                            <div class="challenge-info">
+                                <h3>Phishing Defense</h3>
+                                <p>Identify and report suspicious emails</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 60%">60%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="challenge">
+                            <i class="fas fa-shield-virus"></i>
+                            <div class="challenge-info">
+                                <h3>Malware Analysis</h3>
+                                <p>Learn to detect and analyze malware</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 30%">30%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="card achievements-card">
+                    <h2>Recent Achievements</h2>
+                    <div class="achievements-grid">
+                        <div class="achievement">
+                            <i class="fas fa-trophy achievement-icon"></i>
+                            <span>Firewall Master</span>
+                        </div>
+                        <div class="achievement">
+                            <i class="fas fa-medal achievement-icon"></i>
+                            <span>Encryption Expert</span>
+                        </div>
+                        <div class="achievement locked">
+                            <i class="fas fa-lock achievement-icon"></i>
+                            <span>Network Guardian</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="card leaderboard-card">
+                    <h2>Top Performers</h2>
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <span class="rank">1</span>
+                            <img src="/api/placeholder/30/30" alt="User" class="user-avatar">
+                            <span class="name">Sarah Connor</span>
+                            <span class="points">3,250 pts</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="rank">2</span>
+                            <img src="/api/placeholder/30/30" alt="User" class="user-avatar">
+                            <span class="name">John Smith</span>
+                            <span class="points">3,100 pts</span>
+                        </div>
+                        <div class="leaderboard-item current-user">
+                            <span class="rank">3</span>
+                            <img src="/api/placeholder/30/30" alt="User" class="user-avatar">
+                            <span class="name">You</span>
+                            <span class="points">2,450 pts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!-- Training Section -->
+        <section id="training" class="hidden-section">
+            <div class="training-grid">
+                <div class="card module-card">
+                    <div class="module-header">
+                        <h3>Phishing Defense</h3>
+                        <span class="difficulty">Intermediate</span>
+                    </div>
+                    <p>Learn to identify and protect against phishing attacks</p>
+                    <div class="module-progress">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 60%">60%</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary">Continue</button>
+                </div>
+                <!-- Add more training modules -->
+            </div>
+        </section>
+
+        <!-- Cyber Lab Section -->
+        <section id="lab" class="hidden-section">
+            <div class="lab-container">
+                <div class="card lab-environment">
+                    <h2>Virtual Lab Environment</h2>
+                    <div class="lab-controls">
+                        <button class="btn-primary">Start Simulation</button>
+                        <button class="btn-secondary">Reset Environment</button>
+                    </div>
+                    <div class="lab-workspace">
+                        <div class="terminal">
+                            <div class="terminal-header">
+                                <span>Terminal</span>
+                            </div>
+                            <div class="terminal-content">
+                                <p>root@cyberlab:~# _</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quests Section -->
+        <section id="quests" class="hidden-section">
+            <div class="quests-grid">
+                <div class="card daily-quest">
+                    <div class="quest-header">
+                        <h3>Daily Challenge</h3>
+                        <span class="time-remaining">23:45:12</span>
+                    </div>
+                    <p>Complete 3 phishing identification exercises</p>
+                    <div class="quest-progress">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 33%">1/3</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary">Start Quest</button>
+                </div>
+                <!-- Add more quests -->
+            </div>
+            <div class="quiz-container">
+                <h1>Cybersecurity Quiz</h1>
+                <div class="question"></div>
+                <div class="options"></div>
+                <div class="result"></div>
+                <button class="next-btn">Next Question</button>
+                <button class="submit-btn">Submit Quiz</button>
+                <button class="restart-btn">Restart Quiz</button>
+                <div class="score"></div>
+            </div>
+        
+        </section>
+
+        <!-- News Section -->
+        <section id="news" class="hidden-section">
+            <div class="news-grid">
+                <div class="card news-card">
+                    <div class="news-image">
+                        <img src="/api/placeholder/300/200" alt="Cyber News">
+                    </div>
+                    <div class="news-content">
+                        <h3>Latest Cybersecurity Threats</h3>
+                        <p>New ransomware variant targeting healthcare sector...</p>
+                        <span class="news-date">2 hours ago</span>
+                    </div>
+                </div>
+                <!-- Add more news cards -->
+            </div>
+        </section>
+
+        <section id="team-selection" class="hidden-section">
+            <div class="team-selection-container">
+                <h1>Choose Your Path</h1>
+                <p class="team-intro">Select your specialized training track in cybersecurity</p>
+                
+                <div class="team-cards">
+                    <div class="team-card red-team">
+                        <div class="team-card-content">
+                            <i class="fas fa-dragon team-icon"></i>
+                            <h2>Red Team</h2>
+                            <p>Offensive Security Specialists</p>
+                            <ul class="team-features">
+                                <li><i class="fas fa-check"></i> Penetration Testing</li>
+                                <li><i class="fas fa-check"></i> Exploit Development</li>
+                                <li><i class="fas fa-check"></i> Social Engineering</li>
+                                <li><i class="fas fa-check"></i> Advanced Persistence</li>
+                            </ul>
+                            <a href="#red-team-hub"><button class="btn-team-select" data-team="red" onclick="switchToTeamHub('red')">Join Red Team</button></a>
+                        </div>
+                    </div>
+
+                    <div class="team-card white-team">
+                        <div class="team-card-content">
+                            <i class="fas fa-shield-alt team-icon"></i>
+                            <h2>White Team</h2>
+                            <p>Defensive Security Experts</p>
+                            <ul class="team-features">
+                                <li><i class="fas fa-check"></i> System Hardening</li>
+                                <li><i class="fas fa-check"></i> Incident Response</li>
+                                <li><i class="fas fa-check"></i> Threat Analysis</li>
+                                <li><i class="fas fa-check"></i> Security Architecture</li>
+                            </ul>
+                            <button class="btn-team-select" data-team="white" onclick="switchToTeamHub('white')">Join White Team</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Red Team Hub -->
+        <section id="red-team-hub" class="hidden-section team-hub">
+            <div class="team-hub-container red-theme">
+                <div class="team-header">
+                    <h1><i class="fas fa-dragon"></i> Red Team Operations</h1>
+                    <div class="team-stats">
+                        <span>Team Rank: Elite</span>
+                        <span>Active Operations: 3</span>
+                        <span>Success Rate: 78%</span>
+                    </div>
+                </div>
+
+                <div class="hub-grid">
+                    <!-- Active Operations -->
+                    <div class="card operations-card">
+                        <h2>Active Operations</h2>
+                        <div class="operation-list">
+                            <div class="operation">
+                                <h3>Operation Shadow Strike</h3>
+                                <p>Practice advanced persistence techniques</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 45%">45%</div>
+                                </div>
+                                <button class="btn-primary">Continue Operation</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attack Vector Library -->
+                    <div class="card vector-library">
+                        <h2>Attack Vector Library</h2>
+                        <div class="vector-grid">
+                            <div class="vector-item">
+                                <i class="fas fa-bug"></i>
+                                <span>Exploit Development</span>
+                            </div>
+                            <div class="vector-item">
+                                <i class="fas fa-user-ninja"></i>
+                                <span>Social Engineering</span>
+                            </div>
+                            <div class="vector-item">
+                                <i class="fas fa-network-wired"></i>
+                                <span>Network Infiltration</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training Scenarios -->
+                    <div class="card scenarios-card">
+                        <h2>Training Scenarios</h2>
+                        <div class="scenario-list">
+                            <div class="scenario">
+                                <h3>Corporate Network Breach</h3>
+                                <p>Difficulty: Advanced</p>
+                                <button class="btn-primary">Start Scenario</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- White Team Hub -->
+        <section id="white-team-hub" class="hidden-section team-hub">
+            <div class="team-hub-container white-theme">
+                <div class="team-header">
+                    <h1><i class="fas fa-shield-alt"></i> White Team Defense</h1>
+                    <div class="team-stats">
+                        <span>Security Rating: A+</span>
+                        <span>Active Defenses: 5</span>
+                        <span>Prevention Rate: 92%</span>
+                    </div>
+                </div>
+
+                <div class="hub-grid">
+                    <!-- Active Defenses -->
+                    <div class="card defenses-card">
+                        <h2>Active Defenses</h2>
+                        <div class="defense-list">
+                            <div class="defense">
+                                <h3>Operation Fortress</h3>
+                                <p>Implement zero-trust architecture</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%">65%</div>
+                                </div>
+                                <button class="btn-primary">Monitor Defense</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Tools -->
+                    <div class="card tools-library">
+                        <h2>Security Tools</h2>
+                        <div class="tools-grid">
+                            <div class="tool-item">
+                                <i class="fas fa-shield-virus"></i>
+                                <span>Intrusion Prevention</span>
+                            </div>
+                            <div class="tool-item">
+                                <i class="fas fa-eye"></i>
+                                <span>Threat Detection</span>
+                            </div>
+                            <div class="tool-item">
+                                <i class="fas fa-lock"></i>
+                                <span>Access Control</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Defense Scenarios -->
+                    <div class="card scenarios-card">
+                        <h2>Defense Scenarios</h2>
+                        <div class="scenario-list">
+                            <div class="scenario">
+                                <h3>APT Response</h3>
+                                <p>Difficulty: Expert</p>
+                                <button class="btn-primary">Start Defense</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4">Check if Email is Fraudulent</h1>
+    
+    <form id="emailForm" class="space-y-4">
+      <div>
+        <label for="email" class="block text-lg font-medium">Enter Email:</label>
+        <input type="email" id="email" class="w-full text-black px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" placeholder="example@mail.com" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md">Check Email</button>
+    </form>
+    
+    <div id="result" class="mt-4 text-lg font-semibold"></div>
+  </div>
+        
+        
+    </main>
+
+      <script>
+    const fraudulentEmails = [
+      "fraud@example.com", "scam@phishing.com", "malware@hackmail.com"
+    ];
+
+    const fraudulentDomains = [
+      "fraud.com", "phishing.com", "hackmail.com", "verify.com"
+    ];
+
+    document.getElementById('emailForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const emailInput = document.getElementById('email').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      // Extract domain from email
+      const emailDomain = emailInput.split('@')[1];
+
+      // Check if email is in the fraudulent email list or if its domain is fraudulent
+      if (fraudulentEmails.includes(emailInput.toLowerCase()) || fraudulentDomains.includes(emailDomain.toLowerCase())) {
+        resultDiv.textContent = 'Warning: This email is potentially fraudulent!';
+        resultDiv.className = 'text-red-600 mt-4 text-lg font-semibold';
+      } else {
+        resultDiv.textContent = 'This email appears safe.';
+        resultDiv.className = 'text-green-600 mt-4 text-lg font-semibold';
+      }
+    });
+  </script>
+
+    <script>    // Mobile Menu Toggle with null chec
+    // Select the hamburger button and nav links container
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinksContainer = document.querySelector('.nav-links');
+
+    // Mobile Menu Toggle
+    if (mobileMenuBtn && navLinksContainer) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+        });
+    }
+</script>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="../public/script.js"></script>
+    
+</body>
+</html>
